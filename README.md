@@ -9,7 +9,14 @@ This project expects the following files which can be downloaded from TI:
   * sysconfig-1.23.0_4000-setup.run
   * uniflash_sl.9.1.0.5175.run
   * CCS_20.1.0.00006_linux/ccs_setup_20.1.0.00006.run
-  
+
+CCS_20.1.0.00006_linux (Code composer form TI website).
+
+## Build container from the Dockerfile
+```
+podman build -t ti_embedded_test .
+```
+
 ## Start the container
 In linux using X11 and using podman instead of docker. 
 If you need to run CCS with its GUI, you'll need to enable X11 forwarding:
