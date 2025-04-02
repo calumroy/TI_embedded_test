@@ -69,6 +69,10 @@ RUN add-apt-repository ppa:deadsnakes/ppa && apt-get update && \
     net-tools \
     curl \
     iproute2 \
+    libcanberra-gtk-module \
+    libcanberra-gtk3-module \
+    libcanberra0 \
+    libgconf-2-4 \
     && rm -rf /var/lib/apt/lists/*
 
 # Optional: symlink python3 -> python3.9 or python -> python3.9
@@ -80,7 +84,7 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Python packages
-RUN pip install --no-cache-dir pyserial xmodem tqdm pyelftools construct
+RUN pip install --no-cache-dir pyserial xmodem tqdm pyelftools construct cryptography
 
 # Create a working directory
 WORKDIR /app
@@ -92,11 +96,16 @@ COPY uniflash_sl.9.1.0.5175.run /app/
 COPY README.md /app/
 COPY install_ccs.sh /app/
 COPY CCS_20.1.0.00006_linux /app/CCS_20.1.0.00006_linux/
+COPY ti_cgt_armllvm_4.0.1.LTS_linux-x64_installer.bin /app/
 
 # Make run files and script executable
 RUN chmod +x /app/*.run && \
     chmod +x /app/CCS_20.1.0.00006_linux/ccs_setup_20.1.0.00006.run && \
-    chmod +x /app/install_ccs.sh
+    chmod +x /app/install_ccs.sh && \
+    chmod +x /app/ti_cgt_armllvm_4.0.1.LTS_linux-x64_installer.bin && \
+    chmod +x /app/sysconfig-1.23.0_4000-setup.run && \
+    chmod +x /app/mcu_plus_sdk_am263px_10_01_00_34-linux-x64-installer.run && \
+    chmod +x /app/uniflash_sl.9.1.0.5175.run
 
 # Install passwd if it isn't already
 RUN apt-get update && apt-get install -y passwd

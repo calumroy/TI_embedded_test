@@ -9,6 +9,7 @@ This project expects the following files which can be downloaded from TI:
   * sysconfig-1.23.0_4000-setup.run
   * uniflash_sl.9.1.0.5175.run
   * CCS_20.1.0.00006_linux/ccs_setup_20.1.0.00006.run
+  * ti_cgt_armllvm_4.0.1.LTS_linux-x64_installer.bin
 
 CCS_20.1.0.00006_linux (Code composer form TI website).
 
@@ -34,4 +35,8 @@ Now start a bash session in the container:
 podman exec -it my-ti-container /bin/bash
 ```
 
+Start ccstudio in the container
+```
+ccstudio
+```
 
