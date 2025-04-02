@@ -1,8 +1,33 @@
 # Use Ubuntu 22.04 as base image
 FROM ubuntu:22.04
 
-# Prevent interactive prompts during package installation
+###############################################################################
+# 1) Install systemd/udev so that Blackhawk driver scripts (service udev reload)
+#    can succeed. We also install dbus so systemd can function properly.
+###############################################################################
+ENV container docker
 ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      systemd \
+      systemd-sysv \
+      udev \
+      dbus \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set a default locale (optional, helps avoid locale warnings)
+RUN apt-get update && \
+    apt-get install -y locales && \
+    locale-gen en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/*
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+
+###############################################################################
+# 2) Rest of your original Dockerfile steps
+###############################################################################
 
 # Enable i386 architecture (if Code Composer or other tooling needs it)
 RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y \
@@ -46,37 +71,49 @@ RUN add-apt-repository ppa:deadsnakes/ppa && apt-get update && \
     iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Optional: symlink python3 -> python3.9 or python for convenience
-RUN ln -sf /usr/bin/python3.9 /usr/bin/python3 && ln -sf /usr/bin/python3.9 /usr/bin/python
+# Optional: symlink python3 -> python3.9 or python -> python3.9
+RUN ln -sf /usr/bin/python3.9 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3.9 /usr/bin/python
 
-# Create and use a virtual environment for Python packages
+# Create and use a Python venv
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python packages in the virtual environment
+# Install Python packages
 RUN pip install --no-cache-dir pyserial xmodem tqdm pyelftools construct
 
 # Create a working directory
 WORKDIR /app
 
-# Copy the run files (replace with your actual installation artifacts)
+# Copy your run files (adjust filenames/paths as needed)
 COPY mcu_plus_sdk_am263px_10_01_00_34-linux-x64-installer.run /app/
 COPY sysconfig-1.23.0_4000-setup.run /app/
 COPY uniflash_sl.9.1.0.5175.run /app/
 COPY README.md /app/
-
-# Copy the installation script
 COPY install_ccs.sh /app/
-
-# Copy the CCS directory
 COPY CCS_20.1.0.00006_linux /app/CCS_20.1.0.00006_linux/
 
-# Make the run files executable
+# Make run files and script executable
 RUN chmod +x /app/*.run && \
-    chmod +x /app/CCS_20.1.0.00006_linux/ccs_setup_20.1.0.00006.run
+    chmod +x /app/CCS_20.1.0.00006_linux/ccs_setup_20.1.0.00006.run && \
+    chmod +x /app/install_ccs.sh
 
-# Make the installation script executable
-RUN chmod +x /app/install_ccs.sh
+# Install passwd if it isn't already
+RUN apt-get update && apt-get install -y passwd
 
-# Default to a bash shell
-CMD ["/bin/bash"]
+# Set root password to "root" (or choose something else).
+# Obviously, for real usage pick a more secure password.
+RUN echo "root:root" | chpasswd
+
+# Install CCS during build
+RUN /app/install_ccs.sh
+
+# Add CCS Studio to PATH and create alias
+ENV PATH="/opt/ti/ccs/ccs/theia:${PATH}"
+RUN echo 'alias ccstudio="/opt/ti/ccs/ccs/theia/ccstudio --no-sandbox"' >> /root/.bashrc
+
+###############################################################################
+# 3) Configure the container to run systemd by default
+###############################################################################
+STOPSIGNAL SIGRTMIN+3
+CMD ["/sbin/init"]
