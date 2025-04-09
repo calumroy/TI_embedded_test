@@ -73,6 +73,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa && apt-get update && \
     libcanberra-gtk3-module \
     libcanberra0 \
     libgconf-2-4 \
+    xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Optional: symlink python3 -> python3.9 or python -> python3.9
@@ -95,12 +96,12 @@ COPY sysconfig-1.23.0_4000-setup.run /app/
 COPY uniflash_sl.9.1.0.5175.run /app/
 COPY README.md /app/
 COPY install_ccs.sh /app/
-COPY CCS_20.1.0.00006_linux /app/CCS_20.1.0.00006_linux/
+COPY CCS_20.1.1.00008_linux /app/CCS_20.1.1.00008_linux/
 COPY ti_cgt_armllvm_4.0.1.LTS_linux-x64_installer.bin /app/
 
 # Make run files and script executable
 RUN chmod +x /app/*.run && \
-    chmod +x /app/CCS_20.1.0.00006_linux/ccs_setup_20.1.0.00006.run && \
+    chmod +x /app/CCS_20.1.1.00008_linux/ccs_setup_20.1.1.00008.run && \
     chmod +x /app/install_ccs.sh && \
     chmod +x /app/ti_cgt_armllvm_4.0.1.LTS_linux-x64_installer.bin && \
     chmod +x /app/sysconfig-1.23.0_4000-setup.run && \
