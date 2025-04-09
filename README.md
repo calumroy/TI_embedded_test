@@ -32,20 +32,29 @@ podman build -t ti_embedded_test .
 
 ## Start the container
 In linux using X11 and using podman instead of docker. 
-If you need to run CCS with its GUI, you'll need to enable X11 forwarding:
+This script should start the container if it is not already running and run a bash shell inside the container.
 ```
-podman run -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:rw -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY --name my-ti-container ti_embedded_test:latest
+./start_container.sh
 ```
+The script uses X11 forwarding to run the ccstudio GUI application inside the container.
 
-Now start a bash session in the container:
-```
-podman exec -it my-ti-container /bin/bash
-```
-
-Start ccstudio in the container
+Once the container is running you can start ccstudio in the container
 ```
 ccstudio
 ```
+
+To stop the container run in a terminal window outside the container.
+```
+podman stop my-ti-container 
+```
+
+To remove the container run in a terminal window outside the container.
+```
+podman rm my-ti-container 
+```
+
+The script will also allow access to the USB ports on the host machine to program the AM263P4 board via the XDS110 debugger.
+This debugger is connected to the AM263P4 board via the USB port on the host machine and should be visible as /dev/ttyACM0 and /dev/ttyACM1 within the container.
 
 ## Hardware
 

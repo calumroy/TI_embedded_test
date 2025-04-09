@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "hello_world_am263px-cc_r5fss0-0_nortos_ti-arm-clang",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "hello_world_am263px-cc_r5fss0-0_nortos_ti-arm-clang",
+                "resourceId": "/hello_world_am263px-cc_r5fss0-0_nortos_ti-arm-clang"
+            }
+        }
+    ]
+}

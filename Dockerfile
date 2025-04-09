@@ -122,6 +122,10 @@ RUN /app/install_ccs.sh
 ENV PATH="/opt/ti/ccs/ccs/theia:${PATH}"
 RUN echo 'alias ccstudio="/opt/ti/ccs/ccs/theia/ccstudio --no-sandbox"' >> /root/.bashrc
 
+# /opt/ti/uniflash/node-webkit/nw /opt/ti/uniflash
+RUN echo 'export PATH="/opt/ti/uniflash/node-webkit/nw:$PATH"' >> /root/.bashrc
+RUN echo 'alias uniflash="/opt/ti/uniflash/node-webkit/nw /opt/ti/uniflash"' >> /root/.bashrc 
+
 ###############################################################################
 # 3) Configure the container to run systemd by default
 ###############################################################################

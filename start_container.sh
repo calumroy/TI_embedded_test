@@ -9,8 +9,9 @@ if ! podman ps -a --format "{{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
     podman run -d --privileged \
         -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
         -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v "$(pwd)/project:/app/project" \
         -e DISPLAY \
-        --group-add=dialout \
+        --group-add=keep-groups \
         --device=/dev/ttyACM0:/dev/ttyACM0 \
         --device=/dev/ttyACM1:/dev/ttyACM1 \
         --name "${CONTAINER_NAME}" \
@@ -25,7 +26,6 @@ else
     echo "Container '${CONTAINER_NAME}' is already running."
 fi
 
-# 3) Finally, run an interactive bash shell inside the container
+# 3) Finally, run an interactive bash shell inside the container in the project directory
 echo "Attaching to '${CONTAINER_NAME}'..."
-podman exec -it "${CONTAINER_NAME}" /bin/bash
-
+podman exec -it -w /app/project "${CONTAINER_NAME}" /bin/bash
