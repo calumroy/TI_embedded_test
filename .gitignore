@@ -6,3 +6,4 @@ ti-cgt-armllvm_4.0.1.LTS/**
 CCS_20.1.1.00008_linux.zip
 project/hello_world_am263px-cc_r5fss0-0_nortos_ti-arm-clang/Debug**
 project/hello_world_am263px-cc_r5fss0-0_nortos_ti-arm-clang/Release**
+project/**

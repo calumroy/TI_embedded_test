@@ -126,6 +126,10 @@ RUN echo 'alias ccstudio="/opt/ti/ccs/ccs/theia/ccstudio --no-sandbox"' >> /root
 RUN echo 'export PATH="/opt/ti/uniflash/node-webkit/nw:$PATH"' >> /root/.bashrc
 RUN echo 'alias uniflash="/opt/ti/uniflash/node-webkit/nw /opt/ti/uniflash"' >> /root/.bashrc 
 
+# Install USB utilities and LSB release information
+RUN apt-get update && apt-get install -y usbutils lsb-release && \
+    rm -rf /var/lib/apt/lists/*
+
 ###############################################################################
 # 3) Configure the container to run systemd by default
 ###############################################################################

@@ -10,7 +10,9 @@ if ! podman ps -a --format "{{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
         -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
         -v /tmp/.X11-unix:/tmp/.X11-unix \
         -v "$(pwd)/project:/app/project" \
+        -v /run/udev:/run/udev \
         -e DISPLAY \
+        --network=host \
         --group-add=keep-groups \
         --device=/dev/ttyACM0:/dev/ttyACM0 \
         --device=/dev/ttyACM1:/dev/ttyACM1 \

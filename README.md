@@ -63,3 +63,9 @@ This board uses an AM263P4 chip.
 
 Our final version of our custom board will likely use the automotive grade version of this chip named AM263P4-Q1
 
+## ISSUES
+
+uniflash relies on old outdated packages.
+libgconf-2-4
+gconf-common
+I have added
